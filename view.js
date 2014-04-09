@@ -4,6 +4,8 @@ function View( parent_env, canvas, center, scale ){
 	this.scale 		= scale;
 	this.parent_env = parent_env;
 	this.ctx		= this.canvas.getContext('2d');
+	this.bindCoord( new Coord(0, 0) );
+	this.setCameraStyle("track-single", 10);
 }
 
 //Render function of View object, does the actual printing to the screen.
@@ -11,7 +13,7 @@ function View( parent_env, canvas, center, scale ){
 View.prototype.render = function(){
 	// If a polygon is outside the scope, we need a way to ignore it.
 	// Until then, let's just go through every polygon
-	//this.track(); //Change the camera position, based on the bindings given.
+	this.track(); //Change the camera position, based on the bindings given.
 	this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	
 	
@@ -46,9 +48,21 @@ View.prototype.render = function(){
 	}
 }
 
-View.prototype.bindCoordinates = function(){
-	this.coordinateArray = arguments;
+View.prototype.bindCoord = function(){
+	this.coordinateArray = Array.prototype.slice.call(arguments, 0);
 }
 
-View.prototype.setCameraStyle = function( style ){
+View.prototype.setCameraStyle = function( style, scale ){
+	this.baseScale = scale;
+	if( style=="track-single" ){
+		this.track = function(){
+			this.center = this.coordinateArray[0];
+			this.scale = this.baseScale;
+		}
+	}else if( style=="track-all" ){
+		this.track = function(){
+		}
+	}else{
+		this.setCameraStyle("track-single");
+	}
 }

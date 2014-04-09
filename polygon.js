@@ -9,6 +9,8 @@ function Polygon(){
 	this.density = 1;
 	this.moment = 2;
 	this.isPhysical = false;
+	
+	this.position = new Coord( 0, 0 );
 	this.velocity = new Coord( 0, 0 );
 	this.angularV = 0;
 	this.totalForce = new Coord( 0, 0 );
@@ -35,7 +37,6 @@ Polygon.prototype.init = function(){//A pseudo-private method? This seems kind o
 		this.mass = -(this.area * this.density);
 		this.centroid = new Coord( x, y);
 		//We need to provide a method by which to normalize the 
-		this.position = new Coord( 0, 0 );
 	}
 }
 
@@ -87,11 +88,11 @@ Polygon.prototype.tick = function( delta ){
 		this.velocity.x += (this.totalForce.x/this.mass) * delta;
 		this.velocity.y += (this.totalForce.y/this.mass) * delta;
 		this.angularV 	+= (this.totalTorque/this.moment)* delta;
-		this.position.x += this.velocity.x * delta;
-		this.position.y += this.velocity.y * delta;
-		this.rotation 	+= this.angularV * delta;
 		this.totalForce.x = 0;
 		this.totalForce.y = 0;
 		this.totalTorque = 0;
 	}
+	this.position.x += this.velocity.x * delta;
+	this.position.y += this.velocity.y * delta;
+	this.rotation 	+= this.angularV * delta;
 }

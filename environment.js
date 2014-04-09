@@ -42,14 +42,13 @@ Environment.prototype.tick = function( delta ){//This is the shit that actually 
 	delta = delta*0.001;//Turn it into units of seconds, to match setInteral
 	gravity = new Coord( 0, -1 );
 	buoyancy = new Coord( 0, 4 );
-	this.polygons[1].rotation -= 1*delta;// Therefore, any of these will be in meters per second.
 	coord_array = this.polygons[0].getAbsoluteVertexArray();
 	for( var i = 0; i<coord_array.length-1; i++){
 		if(coord_array[i].y<-2)
 			this.polygons[0].applyForce( buoyancy, coord_array[i] );
 	}
 	this.polygons[0].applyForce( gravity );
-	this.polygons[0].tick(delta);
-	this.views[0].scale = this.polygons[0].velocity.magnitude() + 20;
-	this.views[0].center = this.polygons[0].position;
+	for( var i = 0; i<this.polygons.length; i++ ){
+		this.polygons[i].tick( delta );
+	}
 }
