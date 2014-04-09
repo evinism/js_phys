@@ -48,7 +48,5 @@ Environment.prototype.tick = function( delta ){//This is the shit that actually 
 			this.polygons[0].applyForce( buoyancy, coord_array[i] );
 	}
 	this.polygons[0].applyForce( gravity );
-	for( var i = 0; i<this.polygons.length; i++ ){
-		this.polygons[i].tick( delta );
-	}
+	this.polygons.forEach( function(p){p.tick(delta)} );
 }

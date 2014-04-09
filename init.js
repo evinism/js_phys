@@ -31,5 +31,4 @@ function init_canvas(){
 	
 	//iohandle = view.Iohandle();
 	env.run();
-	setInterval( function(){console.log(q.rotation)}, 1000);
 }
