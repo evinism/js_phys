@@ -1,8 +1,14 @@
-// GPL v3.0 GOES HERE
+/* 	Coordinates:
+	2d Cartesian Coordinates, and some useful functions for manipulating coordinates
+*/
 
 function Coord( x, y ){
 	this.x = x;
 	this.y = y;
+}
+
+function dot( a, b ){
+	return a.x*b.x + a.y*b.y;
 }
 
 function cross( a, b ){

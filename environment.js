@@ -1,7 +1,11 @@
+/*	Environment:
+	
+*/
+
 function Environment(){
 	this.views = new Array();
 	this.polygons = new Array();
-	this.globalconstraints = new Array();
+	this.globalAffectors = new Array();
 }
 
 // Both add the object to the environment and return it.
@@ -21,6 +25,10 @@ Environment.prototype.addPolygon = function( polygon, position ){
 	this.polygons[this.polygons.length] = polygon;
 }
 
+Environment.prototype.addAffector = function( affector ){
+	this.globalAffectors[this.globalAffectors.length] = affector;
+}
+
 Environment.prototype.render = function(){
 	for( i=0; i<this.views.length; i++ ){
 		this.views[i].render();
@@ -30,7 +38,7 @@ Environment.prototype.render = function(){
 Environment.prototype.run = function(){
 	setInterval( function(env){
 		return function(){
-			env.tick( 80 );
+			env.tick( 50 );
 			env.render();
 		}
 	}(this), 20);
@@ -43,10 +51,17 @@ Environment.prototype.tick = function( delta ){//This is the shit that actually 
 	gravity = new Coord( 0, -1 );
 	buoyancy = new Coord( 0, 4 );
 	coord_array = this.polygons[0].getAbsoluteVertexArray();
-	for( var i = 0; i<coord_array.length-1; i++){
+	/*for( var i = 0; i<coord_array.length-1; i++){
 		if(coord_array[i].y<-2)
 			this.polygons[0].applyForce( buoyancy, coord_array[i] );
-	}
-	this.polygons[0].applyForce( gravity );
+	}*/
+	this.polygons.forEach( function(env){
+		return function(p){
+			if(p.isPhysical){
+				env.globalAffectors.forEach( function(a){a.apply(p)} );
+			}
+		}
+	}(this) );
+	//this.polygons[0].applyForce( gravity );
 	this.polygons.forEach( function(p){p.tick(delta)} );
 }

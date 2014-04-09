@@ -1,5 +1,7 @@
-// Polygon prototype function
-// Evin Sellin, 2014
+/*	Polygons:
+	Sets of coordinates, with functions for applying forces and animating the polygons
+	Physical functions change the properties of the polygon itself, nothing more.
+*/
 
 function Polygon(){
 	this.vertices = Array();
@@ -7,7 +9,7 @@ function Polygon(){
 	this.rotation = 0; //Doing this shit in Radians because I can.
 	this.mass = 0.5;
 	this.density = 1;
-	this.moment = 2;
+	this.moment = 2; //To be corrected later, for sure
 	this.isPhysical = false;
 	
 	this.position = new Coord( 0, 0 );
