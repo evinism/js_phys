@@ -1,5 +1,7 @@
-// Polygon prototype function
-// Evin Sellin, 2014
+/*	Polygons:
+	Sets of coordinates, with functions for applying forces and animating the polygons
+	Physical functions change the properties of the polygon itself, nothing more.
+*/
 
 function Polygon(){
 	this.vertices = Array();
@@ -7,7 +9,11 @@ function Polygon(){
 	this.rotation = 0; //Doing this shit in Radians because I can.
 	this.mass = 0.5;
 	this.density = 1;
-	this.moment = 2;
+<<<<<<< HEAD
+	this.moment = 5; //To be corrected later, for sure
+=======
+	this.moment = 2; //To be corrected later, for sure
+>>>>>>> 90b22f247d5dbe3027d7cb2ec4076af934b12a99
 	this.isPhysical = false;
 	
 	this.position = new Coord( 0, 0 );
@@ -15,6 +21,8 @@ function Polygon(){
 	this.angularV = 0;
 	this.totalForce = new Coord( 0, 0 );
 	this.totalTorque = 0;
+	this.totalImpulse = new Coord( 0, 0 );
+	this.totalTorqueI = 0;
 	this.isInit = false;
 }
 
@@ -68,6 +76,19 @@ Polygon.prototype.getAbsoluteVertexArray = function(){//Rotating around Centroid
 	return rotArray;
 }
 
+Polygon.prototype.getAbsoluteVertexVelocities = function(){
+	// Vertex velocities are going to be, uh, absolute velocity plus rotation * perpendicular to lever arm vector?
+	velArray = new Array();
+	for( var i = 0; i<this.vertices.length; i++ ){
+		velArray[i] = this.vertices[i].rotateNewCoord( this.centroid, this.rotation + Math.PI/2 );//Adding 90 degrees to get phase right.
+		velArray[i].x *= this.angularV;
+		velArray[i].y *= this.angularV;//THE ADVANTAGE OF RADIANS BROTHERS AND SISTERS.
+		velArray[i].x += this.velocity.x;
+		velArray[i].y += this.velocity.y;
+	}
+	return velArray;
+}
+
 Polygon.prototype.setPosition = function( position ){
 	this.position = position;
 }
@@ -83,11 +104,24 @@ Polygon.prototype.applyForce = function( force, position ){
 	}
 }
 
+Polygon.prototype.applyImpulse = function( impulse, position ){
+	var impulse = impulse || new Coord(this.position.x - this.centroid.x, this.position.y - this.centroid.y);
+	if( this.isPhysical){
+		this.totalImpulse.x += impulse.x;
+		this.totalImpulse.y += impulse.y;
+		var leverArm = new Coord(position.x - this.position.x + this.centroid.x, position.y - this.position.y + this.centroid.y);
+		this.totalTorqueI += cross( leverArm, impulse );
+	}
+}
+
 Polygon.prototype.tick = function( delta ){
 	if(this.isPhysical){
-		this.velocity.x += (this.totalForce.x/this.mass) * delta;
-		this.velocity.y += (this.totalForce.y/this.mass) * delta;
-		this.angularV 	+= (this.totalTorque/this.moment)* delta;
+		this.velocity.x += (this.totalForce.x * delta + this.totalImpulse.x)/this.mass;
+		this.velocity.y += (this.totalForce.y * delta + this.totalImpulse.y)/this.mass;
+		this.angularV 	+= (this.totalTorque * delta + this.totalTorqueI)/this.moment;
+		this.totalImpulse.x = 0;
+		this.totalImpulse.y = 0
+		this.totalAngularI = 0;
 		this.totalForce.x = 0;
 		this.totalForce.y = 0;
 		this.totalTorque = 0;

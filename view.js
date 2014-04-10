@@ -1,3 +1,9 @@
+/*	View:
+	Object that handles the rendering of the image onto the canvas, can be modded heavily
+	Bound to a specific environment, which will be changed in future versions(via the creation of another object constructor.
+	Has no affect on the environment, other than the environment calling its render function.
+*/
+
 function View( parent_env, canvas, center, scale ){
 	this.canvas 	= canvas;
 	this.center 	= center;
@@ -15,16 +21,6 @@ View.prototype.render = function(){
 	// Until then, let's just go through every polygon
 	this.track(); //Change the camera position, based on the bindings given.
 	this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-	
-	
-	//--For the hell of it, draw a horizontal line at -2
-	this.ctx.beginPath();
-	var a = toCanvasCoords.call(this, new Coord(-100, -2));
-	var b = toCanvasCoords.call(this, new Coord(100, -2));
-	this.ctx.moveTo( a.x, a.y );
-	this.ctx.lineTo( b.x, b.y );
-	this.ctx.stroke();
-	//-- 
 	
 	for( var i = 0; i<this.parent_env.polygons.length; i++ ){
 		var coord_array = this.parent_env.polygons[i].getAbsoluteVertexArray();
