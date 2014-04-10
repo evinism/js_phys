@@ -9,11 +9,7 @@ function Polygon(){
 	this.rotation = 0; //Doing this shit in Radians because I can.
 	this.mass = 0.5;
 	this.density = 1;
-<<<<<<< HEAD
 	this.moment = 5; //To be corrected later, for sure
-=======
-	this.moment = 2; //To be corrected later, for sure
->>>>>>> 90b22f247d5dbe3027d7cb2ec4076af934b12a99
 	this.isPhysical = false;
 	
 	this.position = new Coord( 0, 0 );
