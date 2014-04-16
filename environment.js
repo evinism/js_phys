@@ -6,6 +6,8 @@ function Environment(){
 	this.views = new Array();
 	this.polygons = new Array();
 	this.globalAffectors = new Array();
+	this.tickInterval = 50;
+	this.timeScale = 1;
 }
 
 // Both add the object to the environment and return it.
@@ -36,26 +38,32 @@ Environment.prototype.render = function(){
 }
 
 Environment.prototype.run = function(){
-	setInterval( function(env){
+	this.tickIntervalObject = setInterval( function(env){
 		return function(){
-			env.tick( 100 );
-			env.tick( 50 );
-			env.render();
+			env.tick( env.tickInterval*env.timeScale );
+			//env.render();
 		}
-	}(this), 20);
+	}(this), this.tickInterval);
+	console.log(this.tickInterval);
+}
+
+Environment.prototype.stop = function(){
+	clearInterval(this.tickIntervalObject);
+}
+
+Environment.prototype.setTickInterval = function( delta ){
+	this.tickInterval = delta;
+}
+
+Environment.prototype.setTimeScale = function( scale ){
+	this.timeScale = scale;
 }
 
 //----TICK FUNCTION
 // Your runtime function baby
 Environment.prototype.tick = function( delta ){//This is the shit that actually iterates stuff, basically where the Physics engine will be written.
 	delta = delta*0.001;//Turn it into units of seconds, to match setInteral
-	gravity = new Coord( 0, -1 );
-	buoyancy = new Coord( 0, 4 );
 	coord_array = this.polygons[0].getAbsoluteVertexArray();
-	/*for( var i = 0; i<coord_array.length-1; i++){
-		if(coord_array[i].y<-2)
-			this.polygons[0].applyForce( buoyancy, coord_array[i] );
-	}*/
 	this.polygons.forEach( function(env){
 		return function(p){
 			if(p.isPhysical){
@@ -63,6 +71,5 @@ Environment.prototype.tick = function( delta ){//This is the shit that actually 
 			}
 		}
 	}(this) );
-	//this.polygons[0].applyForce( gravity );
 	this.polygons.forEach( function(p){p.tick(delta)} );
 }

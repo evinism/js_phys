@@ -2,22 +2,23 @@ function init_canvas(){
 	var canvas 	 = document.getElementById("main");
 	var canvas_2 = document.getElementById("second");
 	var env 	 = new Environment();
+	env.setTimeScale( 1 );
+	env.setTickInterval( 20 );
 
-	gravity 		= new Gravity( new Coord( 0, -0.5 ));	
+	gravity 		= new Gravity( new Coord( 0, -10 ));	
 	//groundBounce 	= new forceVertexWall( new Coord( 0, 0.3 ), new Coord( 0, -2) );
-	ground 			= new forceVertexWall( new Coord( 0, 5), new Coord( 0, -2 ) );
+	ground 			= new forceVertexWall( new Coord( 0, 100), new Coord( 0, -2 ) );
 	env.addAffector( gravity );
 	env.addAffector( ground );
 	//env.addAffector( groundBounce );
 	
-	var p = new Polygon();
+	var p = new PhysObject();
 	p.addVertex(new Coord( -1, 1));
 	p.addVertex(new Coord( 1, 1 ));
 	p.addVertex(new Coord( 2, -1 ));
 	p.addVertex(new Coord( -2, -1 ));
 	p.rotation = -1;
 
-	p.isPhysical = true;
 	env.addPolygon( p, new Coord( 0, 5 ) );
 	
 	var q = new Polygon();
@@ -34,12 +35,15 @@ function init_canvas(){
 	groundLine.addVertex(new Coord( 100, -100));
 	groundLine.addVertex(new Coord( -100, -100));
 	env.addPolygon( groundLine, new Coord( 0, -2 ) );
-
-	var view 	 = env.addView( canvas );
-	var view2 	 = env.addView( canvas_2 );
+	
+	var view 	 = new View( env, canvas );
+	var view2 	 = new View( env, canvas_2 );
 	view.bindCoord( p.position );
 	view.setCameraStyle( "track-single", 15 );
 	
-	//iohandle = view.Iohandle();
+	iohandle = new IoHandle();
+	iohandle.addView( view );
+	iohandle.addView( view2 );
+	iohandle.setRenderInterval( 40 );
 	env.run();
 }

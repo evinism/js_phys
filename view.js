@@ -1,17 +1,18 @@
 /*	View:
 	Object that handles the rendering of the image onto the canvas, can be modded heavily
+	This prototype sucks, and I'm going to rewrite it soon.
 	Bound to a specific environment, which will be changed in future versions(via the creation of another object constructor.
 	Has no affect on the environment, other than the environment calling its render function.
 */
 
 function View( parent_env, canvas, center, scale ){
 	this.canvas 	= canvas;
-	this.center 	= center;
-	this.scale 		= scale;
+	this.center 	= center || new Coord(0,0);
+	this.scale 		= scale || 10;
 	this.parent_env = parent_env;
 	this.ctx		= this.canvas.getContext('2d');
-	this.bindCoord( new Coord(0, 0) );
-	this.setCameraStyle("track-single", 10);
+	this.bindCoord( new Coord(0,0) );
+	this.setCameraStyle("track-single", this.scale);
 }
 
 //Render function of View object, does the actual printing to the screen.
