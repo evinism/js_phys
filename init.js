@@ -1,9 +1,16 @@
+/*
+Physics Engine: 2014 Evin Sellin
+Written as an example that I can do OO design.
+Even though JS isn't REALLY an OO language, it's got similar properties,
+and has a lot of the same principles, such as information hiding, the works.
+*/
+
 function init_canvas(){
 	var canvas 	 = document.getElementById("main");
 	var canvas_2 = document.getElementById("second");
 	var env 	 = new Environment();
-	env.setTimeScale( 1 );
-	env.setTickInterval( 20 );
+	env.setTimeScale( 0.7 );//Percent of real time.
+	env.setTickInterval( 30 );
 
 	gravity 		= new Gravity( new Coord( 0, -10 ));	
 	//groundBounce 	= new forceVertexWall( new Coord( 0, 0.3 ), new Coord( 0, -2) );
@@ -18,6 +25,7 @@ function init_canvas(){
 	p.addVertex(new Coord( 2, -1 ));
 	p.addVertex(new Coord( -2, -1 ));
 	p.rotation = -1;
+	p.angularV = 0.5;
 
 	env.addPolygon( p, new Coord( 0, 5 ) );
 	
@@ -44,6 +52,6 @@ function init_canvas(){
 	iohandle = new IoHandle();
 	iohandle.addView( view );
 	iohandle.addView( view2 );
-	iohandle.setRenderInterval( 40 );
+	iohandle.setRenderInterval( 20 );
 	env.run();
 }

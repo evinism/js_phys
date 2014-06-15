@@ -3,6 +3,7 @@ PhysObject.constructor = PhysObject;
 
 function PhysObject(){
 	Polygon.call(this);
+	this.constraints = new Array();
 	this.mass = 0.5;
 	this.density = 1;
 	this.moment = 5; //To be corrected later, for sure
@@ -35,6 +36,7 @@ PhysObject.prototype.applyImpulse = function( impulse, position ){
 }
 
 PhysObject.prototype.tick = function( delta ){
+	//this.satisfyConstraints();
 	this.velocity.x += (this.totalForce.x * delta + this.totalImpulse.x)/this.mass;
 	this.velocity.y += (this.totalForce.y * delta + this.totalImpulse.y)/this.mass;
 	this.angularV 	+= (this.totalTorque * delta + this.totalTorqueI)/this.moment;

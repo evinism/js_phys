@@ -9,7 +9,6 @@ IoHandle.prototype.addView = function( view ){
 }
 
 IoHandle.prototype.render = function(){
-	console.log(this);
 	for( var i=0; i<this.views.length; i++){
 		this.views[i].render();
 	}

@@ -5,8 +5,7 @@
 
 function Polygon(){
 	this.vertices = Array();
-	this.constraints = Array();
-	this.rotation = 0; //Doing this shit in Radians because I can.
+	this.rotation = 0; //Doing this in Radians because I can.
 	this.position = new Coord( 0, 0 );
 	this.velocity = new Coord( 0, 0 );
 	this.angularV = 0;
@@ -14,7 +13,7 @@ function Polygon(){
 	this.isInit = false;
 }
 
-Polygon.prototype.init = function(){//A pseudo-private method? This seems kind of like the wrong way to do this.
+Polygon.prototype.init = function(){//A pseudo-private method. Since JS doesn't really do that, I'll just pretend.
 	if( !this.isInit ){
 		//Repeat last coordinate to make loops easier
 		this.vertices[this.vertices.length] = this.vertices[0];
@@ -32,18 +31,15 @@ Polygon.prototype.init = function(){//A pseudo-private method? This seems kind o
 		this.isInit = true;
 		this.mass = -(this.area * this.density);
 		this.centroid = new Coord( x, y);
-		//We need to provide a method by which to normalize the 
 	}
 }
 
 Polygon.prototype.addVertex = function( vertex ){
-	//assert( typeof vertex!='Coord', "Polygon.addVertex expects an array" );
 	//For ease of use, we really want to only add one vertex at a time.
 	var ind = this.vertices.length;
 	if( ind>0 ){
 		//If we put another vertex colinearly, then just replace the last vertex
 		var c = cross(vertex - this.vertices[ind-1], this.vertices[ind-1]-this.vertices[ind-2]);
-		//assert( c>=0, "Polygon.addVertex expects convex positively-oriented polygons")
 		if( c == 0 ){
 			ind--;
 		}

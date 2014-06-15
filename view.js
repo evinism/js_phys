@@ -15,6 +15,7 @@ function View( parent_env, canvas, center, scale ){
 	this.setCameraStyle("track-single", this.scale);
 }
 
+
 //Render function of View object, does the actual printing to the screen.
 //Improve this when you need efficiency.
 View.prototype.render = function(){
@@ -22,12 +23,20 @@ View.prototype.render = function(){
 	// Until then, let's just go through every polygon
 	this.track(); //Change the camera position, based on the bindings given.
 	this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+	var delta = (new Date()).getTime() - this.parent_env.getLastTickTime();
 	
 	for( var i = 0; i<this.parent_env.polygons.length; i++ ){
-		var coord_array = this.parent_env.polygons[i].getAbsoluteVertexArray();
+		var currentPolygon = this.parent_env.polygons[i];
+		var coord_array = currentPolygon.getAbsoluteVertexArray();
 		//toCanvasCoords.polygon_position = this.parent_env.polygons[i].position;// Set the center of the Polygon.
 		this.ctx.beginPath();
-		var canv_pos = toCanvasCoords.call( this, coord_array[0] );
+		//Find the new coordinates, after timeDif milliseconds(predicted)
+		for( k=0; k<coord_array.length; k++ ){
+			coord_array[k] = coord_array[k].rotateNewCoord( new Coord(currentPolygon.centroid.x+currentPolygon.position.x, currentPolygon.centroid.y+currentPolygon.position.y), currentPolygon.angularV*delta/1000 );
+			coord_array[k].x += currentPolygon.velocity.x*delta/1000;
+			coord_array[k].y += currentPolygon.velocity.y*delta/1000;
+		}
+		var canv_pos = toCanvasCoords.call( this, coord_array[0]  );
 		this.ctx.moveTo( canv_pos.x, canv_pos.y );
 		//Since last coord is repeated, it auto-goes back to the start.
 		for( var j=0; j<coord_array.length; j++){

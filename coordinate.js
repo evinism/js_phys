@@ -19,8 +19,12 @@ function dif( a, b ){
 	return new Coord( a.x-b.x, a.y-b.y );
 }
 
+Coord.prototype.magnitude = function(){
+	return Math.pow((this.x*this.x+this.y*this.y),0.5);
+}
+
 Coord.prototype.rotateNewCoord = function( axis, angle ){
-	if( Coord.prototype.rotateNewCoord.angle != angle ){//Only calculate the matrix when the angle changes, eliminating excess computations.
+	if( Coord.prototype.rotateNewCoord.angle != angle ){//Only calculate the matrix when the angle changes, eliminating excess computations
 		var matr = Array();
 		var sinAngle = Math.sin( angle );
 		var cosAngle = Math.cos( angle );
@@ -37,8 +41,4 @@ Coord.prototype.rotateNewCoord = function( axis, angle ){
 	rotated.x += axis.x;
 	rotated.y += axis.y;
 	return rotated;
-}
-
-Coord.prototype.magnitude = function(){
-	return Math.pow((this.x*this.x+this.y*this.y),0.5);
 }
